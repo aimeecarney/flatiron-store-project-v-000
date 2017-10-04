@@ -14,4 +14,4 @@ Item.all.each do |item|
   counter += 1
 end
 
-User.create(email:'test@test.com', password: '123')
+FactoryGirl.create(:user)
