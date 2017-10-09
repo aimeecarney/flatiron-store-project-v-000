@@ -14,11 +14,30 @@ class Cart < ActiveRecord::Base
   def add_item(item_id)
     line_item = self.line_items.find_by(item_id: item_id)
     if line_item
-      line_item.quantity += 1
+      line_item.quantity += 1 unless line_item.item.inventory == 0
+      line_item.item.inventory -= 1 unless line_item.item.inventory == 0
+      line_item.item.save
     else
       line_item = self.line_items.build(item_id: item_id)
     end
     line_item
+  end
+
+  def checkout
+    self.status = "submitted"
+    self.clear_inventory
+    self.user.current_cart_id = nil
+    self.user.save
+    self.save
+  end
+
+  def clear_inventory
+    if self.status == "submitted"
+      self.line_items.each do |line_item|
+        line_item.item.inventory -= line_item.quantity
+        line_item.item.save
+      end
+    end
   end
 
 end

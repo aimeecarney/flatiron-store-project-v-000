@@ -1,0 +1,4 @@
+<% @items.each do |item| %>
+  <p><%= item.title %></p>
+  <%= button_to 'Add to Cart',line_items_path(item_id: item.id) if user_signed_in?%>
+<% end %>

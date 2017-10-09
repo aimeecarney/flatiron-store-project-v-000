@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   def create_current_cart
     self.current_cart = self.carts.create
-    binding.pry
     self.save
   end
+
 end
